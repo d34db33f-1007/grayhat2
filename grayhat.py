@@ -77,11 +77,10 @@ class s3:
 				self.trash(file['url'])
 				continue
 			for x in ext[1:]:
-				if x.startswith('-'):
-					if x in re.split(r'[.-/-_\s]\s*', file['fullPath']):
-						if buc:
-							self.trash(file['url'])
-							del buc
+				if x.replace('-', '') in re.split(r'[.-/-_\s]\s*', file['fullPath']):
+					if buc:
+						self.trash(file['url'])
+						del buc
 			try:
 				self.list.append(buc)
 			except:
