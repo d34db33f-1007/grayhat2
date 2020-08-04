@@ -85,7 +85,7 @@ class s3:
 				self.list.append(buc)
 			except:
 				pass
-		print(f"Bucket ID: {self.pl.split('bucket/')[1].split('/')[0]} / 94000", end="\r")
+		print(f"Bucket ID: {self.pl.split('bucket/')[1].split('/')[0]} / 91450", end="\r")
 		return self.list
 
 	def trash(self, url):
