@@ -24,7 +24,7 @@ class Brute:
 #		self.executor = ThreadPoolExecutor(30)
 
 	async def proc(self, bid, st: int = 0):
-		for __ in range(100000 // 998):
+		for _ in range(100000 // 998):
 			bless = bl.Bucket(api_k = self.token, b_id=bid, start=st, stop=998, ext=self.extensions)
 			warfare = s3(bless)
 			loop = asyncio.get_event_loop()
