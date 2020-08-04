@@ -46,7 +46,7 @@ class Brute:
 			await asyncio.sleep(2)
 
 	async def hack(self):
-		await asyncio.gather(*[self.proc(bid=Id) for Id in range(1, 94000)])
+		await asyncio.gather(*[self.proc(bid=Id) for Id in range(1, 91450)])
 
 
 if __name__ == '__main__':
