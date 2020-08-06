@@ -79,7 +79,9 @@ class s3:
 				self.trash(file['url'])
 				continue
 			for x in ext[1:]:
-				if x.replace('-', '') in re.split(r'[.-/-_\s]\s*', file['fullPath']):
+				x = x.replace('-', '') if x.startswith('-') else x
+				chk = file['url'].split('//')[1]
+				if x in re.split(r'[.-/-_\s]\s*', chk):
 					if buc:
 						self.trash(file['url'])
 						buc = None
