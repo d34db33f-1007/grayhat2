@@ -82,11 +82,9 @@ class s3:
 				if x.replace('-', '') in re.split(r'[.-/-_\s]\s*', file['fullPath']):
 					if buc:
 						self.trash(file['url'])
-						del buc
-			try:
+						buc = None
+			if buc:
 				self.list.append(buc)
-			except:
-				pass
 		return self.list
 
 	def trash(self, url):
