@@ -55,6 +55,8 @@ class s3:
 			return False
 
 	def files(self, size: float = None, ext: List[str] = []):
+		print(f"Bucket ID: {self.pl.split('bucket/')[1].split('/')[0]} \
+/ 91450", end="\r")
 		Files = self.search()
 		if not Files:
 			return False
@@ -69,7 +71,6 @@ class s3:
 			buc['file_url'] = file['url']
 			mb = float(f"{int(file['size']) / 1048576}")
 			buc['file_size'] = f'{int(mb)} Mb'
-			print(f"Bucket ID: {self.pl.split('bucket/')[1].split('/')[0]} / 91450", end="\r")
 			if size:
 				if mb < float(size):
 					self.trash(file['url'])
