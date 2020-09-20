@@ -8,8 +8,8 @@ from grayhat import Bucket
 
 token = input('Enter your grayhatwarfare.com api token: ')
 ext = input('Which file extension to search? ').lstrip('.')
-print('\nEnter minimum size of files in Mb: ex. 4000, 0.05')
-size = input('Enter 0 if none: ')
+print('\nEnter minimum or maximum size of files in Mb: ex. min4000, max0.05')
+size = input('Leave empty if none: ')
 
 kwrd = ext.split()
 with open('exclude.txt', 'r') as kw:
@@ -25,7 +25,7 @@ async def proc(bid, st: int = 0):
 	for _ in range(100000 // 998):
 		warfare = s3(bless.format(bid, st, 990))
 		loop = asyncio.get_event_loop()
-		run = loop.run_in_executor(None, warfare.files, float(size), kwrd)
+		run = loop.run_in_executor(None, warfare.files, size, kwrd)
 		if not (res := await run) or len(res) < 2:
 			break
 		elif not (i := res[0]) or st > i:

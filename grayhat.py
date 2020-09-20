@@ -49,7 +49,7 @@ class s3:
 #			print(f'[Code: {resp.status_code}] Connection error..')
 			return False
 
-	def files(self, size: float = None, ext: List[str] = []):
+	def files(self, size: str, ext: List[str] = []):
 		print(f"Bucket ID: {self.pl.split('bucket/')[1].split('/')[0]} \
 / 91450", end="\r")
 		Files = self.search()
@@ -66,13 +66,14 @@ class s3:
 			buc['file_url'] = file['url']
 			mb = float(f"{int(file['size']) / 1048576}")
 			buc['file_size'] = f'{int(mb)} Mb'
-			if size:
-				if mb > float(size):
+			if size[:3] == ('min' or 'max'):
+				clc = mb > (i := float(size[3:])) if size[:3] == 'min' else mb < i
+				if not clc:
 					self.trash(file['url'])
 					continue
 			if (fl := file['filename'].split('.'))[-1] != ext[0]:
 				if fl[-1] != (str(ext[0]) + '~'):
-					if len(fl) < 2 or fl[-2] != ext[0]:
+					if (len(fl) < 2 or fl[-2] != ext[0]) or fl[-1] != 'bak':
 						self.trash(file['url'])
 						continue
 			for _ in (_x := sample(ext[1:], len(ext) -1)):
