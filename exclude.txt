@@ -1,1 +1,1 @@
--html,-js,-png,-css,-php,-style,-styles,-img,-web,-www,-public,-asset,-assets,-mp3,-music,-picture,-pictures,-jpg,-mp4,-mkv,-xml,-svg,-nsf,-xm,-index,-manifest,-htm,-ico,-icons,-pic,-wp,-html5
+-html,-png,-css,-styles,-img,-mp3,-music,-picture,-pictures,-jpg,-mp4,-mkv,-svg,-manifest,-htm,-ico,-icons,-pic,-wp,-html5,-node,-doc,-quickstart,-docs,-jquery,-bootstrap,-angular,-README,-readme,-license,-LICENSE,-Bootstrap,-WP

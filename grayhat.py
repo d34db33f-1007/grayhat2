@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-import sys, re
-import requests, json
+import requests, json, re
 
+from random import sample
 from typing import List
 
 
@@ -12,27 +12,22 @@ class ForbiddenAccess(Exception):
 	pass
 
 
-class Build:
+class Bucket():
 
-	def Bucket(api_k: str, b_id: str, start = 0, stop=None, ext: List[str] = []):
-		buck = 'https://buckets.grayhatwarfare.com/api/v1'
-		buck += f'/bucket/{b_id}/files'
-		buck += f'/{start}/{stop}' if stop else f'/{start}'
-		buck += f'?access_token={api_k}'
-		if ext and 0 < len(ext) < 5:
-			with open('exclude.txt', 'r') as negative:
-				for trash in negative.read().split(','):
-					if trash.startswith('-'):
-						ext += trash.split()
-		if len(ext) > 0:
-			buck += f'&keywords='
-			e = '%20' if len(ext) > 1 else ''
-			for ex in ext:
-				n = ext.index(ex)
-				if n > 0 and not ex.startswith('-'):
+	def __init__(self, api_k: str, ext: List[str] = []):
+		self.api = api_k
+		self.ext = ext
+
+	def get(self):
+		url = 'https://buckets.grayhatwarfare.com/api/v1'
+		url += '/bucket/{}/files/{}/{}'
+		url += f'?access_token={self.api}&keywords='
+		for ex in (n := self.ext):
+			if not ex.startswith('-'):
+				if n.index(ex) > 0:
 					continue
-				buck += f'{ex}{e}' if n < (len(ext) -1) else f'{ex}'
-		return buck
+			url += f'{ex}%20'
+		return url
 
 
 class s3:
@@ -43,7 +38,7 @@ class s3:
 
 	def search(self):
 		try:
-			resp = requests.get(self.pl)
+			resp = requests.get(self.pl, timeout=20)
 		except:
 			return False
 		if resp.status_code == 200:
@@ -60,7 +55,7 @@ class s3:
 		Files = self.search()
 		if not Files:
 			return False
-		self.list.append(f"{Files['results']}")
+		self.list.append(int(Files['results']))
 		for file in Files['files']:
 			buc = {}
 			buc['fid'] = file['id']
@@ -72,21 +67,21 @@ class s3:
 			mb = float(f"{int(file['size']) / 1048576}")
 			buc['file_size'] = f'{int(mb)} Mb'
 			if size:
-				if mb < float(size):
+				if mb > float(size):
 					self.trash(file['url'])
 					continue
-			if re.split(r'[.-/-_\s]\s*', file['filename'])[-1] != ext[0]:
-				self.trash(file['url'])
-				continue
-			for x in ext[1:]:
-				x = x.replace('-', '') if x.startswith('-') else x
-				chk = file['url'].split('//')[1]
-				if x in re.split(r'[.-/-_\s]\s*', chk):
-					if buc:
+			if (fl := file['filename'].split('.'))[-1] != ext[0]:
+				if fl[-1] != (str(ext[0]) + '~'):
+					if len(fl) < 2 or fl[-2] != ext[0]:
 						self.trash(file['url'])
-						buc = None
-			if buc:
-				self.list.append(buc)
+						continue
+			for _ in (_x := sample(ext[1:], len(ext) -1)):
+				chk = file['url'].split('//')[1]
+				if _.lstrip('-') in re.split(r'[.-/-_\s]\s*', chk):
+					self.trash(file['url'])
+					break
+				elif _x[-1].endswith(_):
+					self.list.append(buc)
 		return self.list
 
 	def trash(self, url):
