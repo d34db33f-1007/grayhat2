@@ -26,7 +26,6 @@ async def proc(bid, st: int = 0):
 		warfare = s3(bless.format(bid, st, 990))
 		loop = asyncio.get_event_loop()
 		run = loop.run_in_executor(None, warfare.files, float(size), kwrd)
-#		res = await run
 		if not (res := await run) or len(res) < 2:
 			break
 		elif not (i := res[0]) or st > i:
